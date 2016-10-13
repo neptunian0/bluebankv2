@@ -5,6 +5,10 @@ import android.util.Log;
 import com.lloydtucker.bluebankv2.Customers;
 import com.lloydtucker.bluebankv2.interfaces.ApiAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -16,10 +20,21 @@ import okhttp3.Response;
 
 import static com.lloydtucker.bluebankv2.helpers.Constants.BEARER_TOKEN;
 import static com.lloydtucker.bluebankv2.helpers.Constants.BEARER_URI;
+import static com.lloydtucker.bluebankv2.helpers.Constants.BLUE_API;
+import static com.lloydtucker.bluebankv2.helpers.Constants.BLUE_URI;
+import static com.lloydtucker.bluebankv2.helpers.Constants.BLUE_VERSION;
 import static com.lloydtucker.bluebankv2.helpers.Constants.HEADER;
 import static com.lloydtucker.bluebankv2.helpers.Constants.HEADER_BEARER;
 import static com.lloydtucker.bluebankv2.helpers.Constants.HTTPS;
 import static com.lloydtucker.bluebankv2.helpers.Constants.JSON;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ADDRESS_1;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_BEARER;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_CUSTOMERS;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_FAMILY_NAME;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_GIVEN_NAME;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ID;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_POST_CODE;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_TOWN;
 import static com.lloydtucker.bluebankv2.helpers.Constants.blue_primary;
 import static com.lloydtucker.bluebankv2.helpers.Constants.client;
 
@@ -39,148 +54,104 @@ public class BlueBankApiAdapter implements ApiAdapter {
     * Gathering data methods
     */
     @Override
-    public void getCustomers() throws IOException{
-        GET_BEARER();
-//        try{
-//            jsonObject = new JSONObject(result);
-//            bearer = jsonObject.getString(TAG_BEARER);
-//        } catch(JSONException e){
-//            e.printStackTrace();
-//            Log.d("JSONException", "JSON Exception while parsing bearer token");
-//        }
-//        Log.d("Bearer", bearer);
-
-        /*try{
-            result = new APIRequest().execute(request).get();
-        } catch(InterruptedException e){
-            e.printStackTrace();
-            Log.d(TAG, "ERROR: Interrupted Exception");
-        }
-        catch(ExecutionException e){
-            e.printStackTrace();
-            Log.d(TAG, "ERROR: Execution Exception");
+    public ArrayList<Customers> getCustomers() throws IOException {
+        ArrayList<Customers> customers = new ArrayList<>();
+        //Retrieve the bearer token
+        if (bearer == null) {
+            bearer = GET_BEARER();
         }
 
-        //TODO: USE THIS METHOD ABOVE TO RETRIEVE DATA IN THE FUTURE
-        Log.d("Response", "Before Customers");
-        request = new Request().Builder()
-                .header()
-                .url()
-                .build();
+        //Retrieve the customer data, then parse it
+        Response response = GET(getCustomersUri());
+        String stringResponse = response.body().string();
+        JSONArray jsonArray;
         try {
-            result = new APIRequest().execute().get();
-        } catch(InterruptedException e){
-            e.printStackTrace();
-            Log.d(TAG, "ERROR: Interrupted Exception");
-        }
-        catch(ExecutionException e){
-            e.printStackTrace();
-            Log.d(TAG, "ERROR: Execution Exception");
-        }
-        Log.d("response", "Success!!!");
-        try {
-            JSONArray jsonArr = new JSONArray(result.body().string());
-            Log.d("jsonArr", jsonArr.toString());
+            jsonArray = new JSONArray(stringResponse);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonCustomer = jsonArray.getJSONObject(i);
+                Customers customer = new Customers();
 
-            // looping through All Contacts
-            //should be i < jsonArr.length(), but only want 10 customers
-            for (int i = 0; i < jsonArr.length() && i < 10; i++) {
-                JSONObject c = jsonArr.getJSONObject(i);
-                Log.d("Customers", c.toString());
-                Customers cus = new Customers();
+                customer.setId(jsonCustomer.getString(TAG_ID));
+                customer.setGivenName(jsonCustomer.getString(TAG_GIVEN_NAME));
+                customer.setFamilyName(jsonCustomer.getString(TAG_FAMILY_NAME));
+                customer.setAddress1(jsonCustomer.getString(TAG_ADDRESS_1));
+                customer.setTown(jsonCustomer.getString(TAG_TOWN));
+                customer.setPostCode(jsonCustomer.getString(TAG_POST_CODE));
 
-                cus.setId(c.getString(TAG_ID));
-                cus.setGivenName(c.getString(TAG_GIVEN_NAME));
-                cus.setFamilyName(c.getString(TAG_FAMILY_NAME));
-                cus.setAddress1(c.getString(TAG_ADDRESS_1));
-                cus.setTown(c.getString(TAG_TOWN));
-                cus.setPostCode(c.getString(TAG_POST_CODE));
-
-                customers.add(cus);
+                customers.add(customer);
+                Log.d("BlueBankApiAdapter", customer.getGivenName());
             }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
-            Log.d(TAG, "ERROR: JSONException");
+            Log.d(TAG, "JSONException while parsing customer data");
         }
-        catch (IOException e){
-            e.printStackTrace();
-            Log.d(TAG, "ERROR: IOException");
-        }*/
-        //Log.d("Response", "size customers " + customers.size());
-        //return customers;
+        return customers;
     }
 
-    /*
-    * Network request methods
-    */
-    /*public static void GET_BEARER() throws IOException {
-        Request request = new Request.Builder()
-	    //primary key held below
-	    .header(HEADER, blue_primary)
-	    .url(new HttpUrl.Builder()
-                .scheme(HTTPS)
-                .host(BEARER_URI)
-                .addPathSegment(BEARER_TOKEN)
-                .build())
-	    .build();
-
-        String response = client.newCall(request).execute().body().string();
-
-        try {
-            JSONObject jsonObj = new JSONObject(response);
-            bearer = jsonObj.getString(TAG_BEARER);
-        }
-        catch(JSONException e){
-            e.printStackTrace();
-            Log.d("JSONException", "Exception parsing bearer token");
-        }
-    }*/
 
     //GET Bearer network request
-    public void GET_BEARER(){
+    public String GET_BEARER() throws IOException{
+        //Build the bearer request
         Request request = new Request.Builder()
                 //primary key held below
                 .header(HEADER, blue_primary)
                 .url(getBearerUri())
                 .build();
 
-        APIRequest apiRequest = new APIRequest();
-        //apiRequest.delegate = this;
-        Log.d("BlueBankApiAdapter", "Before");
+        //Make the API Request and retrieve the result
+        Response response = null;
         try {
-            Response response = apiRequest.execute(request).get();
-            Log.d("BlueBankApiAdapter", "SUCCESS");
-            Log.d("BlueBankApiAdapter", response.body().string());
+            response = new APIRequest().execute(request).get();
+//            Log.d("BlueBankApiAdapter", "SUCCESS");
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Log.d(TAG, "InterruptedException while retrieving bearer token");
         } catch (ExecutionException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(TAG, "ExecutionException while retrieving bearer token");
         }
+
+        //Parse the JSON object returned to return the bearer token
+        JSONObject jsonObject;
+        String bearer = "";
+        try {
+            jsonObject = new JSONObject(response.body().string());
+            bearer = jsonObject.getString(TAG_BEARER);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.d(TAG, "JSONException while parsing bearer token");
+        }
+        return bearer;
     }
 
     //GET network request
     @Override
-    public Request GET(HttpUrl url) throws IOException {
-        if(bearer == null) {
-            GET_BEARER();
-        }
-
+    public Response GET(HttpUrl url) throws IOException {
         Request request = new Request.Builder()
 	    //primary key held below
 	    .header(HEADER, blue_primary)
         .header(HEADER_BEARER, bearer)
 	    .url(url)
 	    .build();
-        Response response = client.newCall(request).execute();
-        return null;
+
+        Response response = null;
+        try {
+            response = new APIRequest().execute(request).get();
+//            Log.d("BlueBankApiAdapter", "SUCCESS");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Log.d(TAG, "InterruptedException while retrieving customer data");
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            Log.d(TAG, "ExecutionException while retrieving customer data");
+        }
+
+        return response;
     }
 
     //POST network request
     @Override
-    public Request POST(HttpUrl url, String json) throws IOException {
+    public Response POST(HttpUrl url, String json) throws IOException {
         RequestBody body = RequestBody.create(JSON, json);
         Request request = new Request.Builder()
 	    //primary key held below
@@ -194,7 +165,7 @@ public class BlueBankApiAdapter implements ApiAdapter {
     }
 
     @Override
-    public Request PATCH(HttpUrl url, String json) throws IOException {
+    public Response PATCH(HttpUrl url, String json) throws IOException {
         RequestBody body = RequestBody.create(JSON, json);
         Request request = new Request.Builder()
                 //primary key held below
@@ -208,7 +179,13 @@ public class BlueBankApiAdapter implements ApiAdapter {
     }
 
     public HttpUrl getCustomersUri(){
-        return null;
+        return new HttpUrl.Builder()
+                .scheme(HTTPS)
+                .host(BLUE_URI)
+                .addPathSegment(BLUE_API)
+                .addPathSegment(BLUE_VERSION)
+                .addPathSegment(TAG_CUSTOMERS)
+                .build();
     }
 
     public HttpUrl getBearerUri(){
@@ -218,9 +195,4 @@ public class BlueBankApiAdapter implements ApiAdapter {
                 .addPathSegment(BEARER_TOKEN)
                 .build();
     }
-
-//    @Override
-//    public void customerFinish(String output) {
-//        Log.d("BlueBankApiAdapter", "SUCCESS!");
-//    }
 }

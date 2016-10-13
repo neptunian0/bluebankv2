@@ -1,23 +1,26 @@
 package com.lloydtucker.bluebankv2.interfaces;
 
+import com.lloydtucker.bluebankv2.Customers;
+
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.HttpUrl;
-import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by lloydtucker on 07/10/2016.
  */
 
 public interface ApiAdapter {
-    void getCustomers() throws IOException;
+    ArrayList<Customers> getCustomers() throws IOException;
 
     //GET network request
-    Request GET(HttpUrl url) throws IOException;
+    Response GET(HttpUrl url) throws IOException;
 
     //POST network request
-    Request POST(HttpUrl url, String json) throws IOException;
+    Response POST(HttpUrl url, String json) throws IOException;
 
     //PATCH network request
-    Request PATCH(HttpUrl url, String json) throws IOException;
+    Response PATCH(HttpUrl url, String json) throws IOException;
 }

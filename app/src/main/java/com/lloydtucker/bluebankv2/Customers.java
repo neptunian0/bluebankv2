@@ -1,7 +1,5 @@
 package com.lloydtucker.bluebankv2;
 
-import android.util.Log;
-
 import java.io.Serializable;
 
 /**
@@ -141,7 +139,6 @@ public class Customers implements Serializable{
      * The familyName
      */
     public void setFamilyName(String familyName) {
-        Log.d("Set", familyName);
         this.familyName = familyName;
     }
 
