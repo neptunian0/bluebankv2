@@ -2,8 +2,9 @@ package com.lloydtucker.bluebankv2.helpers;
 
 import android.util.Log;
 
-import com.lloydtucker.bluebankv2.Customers;
 import com.lloydtucker.bluebankv2.interfaces.ApiAdapter;
+import com.lloydtucker.bluebankv2.pojos.Accounts;
+import com.lloydtucker.bluebankv2.pojos.Customers;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,13 +28,21 @@ import static com.lloydtucker.bluebankv2.helpers.Constants.HEADER;
 import static com.lloydtucker.bluebankv2.helpers.Constants.HEADER_BEARER;
 import static com.lloydtucker.bluebankv2.helpers.Constants.HTTPS;
 import static com.lloydtucker.bluebankv2.helpers.Constants.JSON;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNTS;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_BALANCE;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_CURRENCY;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_FRIENDLY_NAME;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_NUMBER;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_TYPE;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ADDRESS_1;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_BEARER;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_CUSTOMERS;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_CUSTOMER_ID;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_FAMILY_NAME;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_GIVEN_NAME;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ID;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_POST_CODE;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_SORT_CODE;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_TOWN;
 import static com.lloydtucker.bluebankv2.helpers.Constants.blue_primary;
 import static com.lloydtucker.bluebankv2.helpers.Constants.client;
@@ -44,18 +53,24 @@ import static com.lloydtucker.bluebankv2.helpers.Constants.client;
 public class BlueBankApiAdapter implements ApiAdapter {
     private static final String TAG = BlueBankApiAdapter.class.getSimpleName();
     private static String bearer;
-    private volatile ArrayList<Customers> customers;
 
+    //Store the retrieved data locally to enable greater
+    //modularity in travering the respective APIs
+    ArrayList<Customers> customers;
+    ArrayList<Accounts> accounts;
+
+    //Empty constructor
     public BlueBankApiAdapter(){
-        customers = new ArrayList<Customers>();
+        customers = new ArrayList<>();
+        accounts = new ArrayList<>();
     }
 
     /*
-    * Gathering data methods
+    * GATHERING DATA METHODS
     */
+    //assumes there will only be a single Customer object
     @Override
     public ArrayList<Customers> getCustomers() throws IOException {
-        ArrayList<Customers> customers = new ArrayList<>();
         //Retrieve the bearer token
         if (bearer == null) {
             bearer = GET_BEARER();
@@ -88,6 +103,46 @@ public class BlueBankApiAdapter implements ApiAdapter {
         return customers;
     }
 
+    public ArrayList<Accounts> getAccounts() throws IOException{
+        //check the dependencies for retrieving the account objects
+        if(bearer == null){
+            bearer = GET_BEARER();
+        }
+        if(customers.isEmpty()){
+            //don't need to store the returned customers list
+            //they're stored in the ApiAdapter object
+            getCustomers();
+        }
+
+        //Retrieve the accounts data, then parse it
+        String customerId = customers.get(0).getId(); //assumes only one customer exists
+        Response response = GET(getAccountsUri(customerId));
+        String stringResponse = response.body().string();
+        JSONArray jsonArray;
+        try {
+            jsonArray = new JSONArray(stringResponse);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonAccount = jsonArray.getJSONObject(i);
+                Accounts account = new Accounts();
+
+                account.setId(jsonAccount.getString(TAG_ID));
+                account.setSortCode(jsonAccount.getString(TAG_SORT_CODE));
+                account.setAccountType(jsonAccount.getString(TAG_ACCOUNT_TYPE));
+                account.setAccountFriendlyName(jsonAccount.getString(TAG_ACCOUNT_FRIENDLY_NAME));
+                account.setAccountBalance(jsonAccount.getDouble(TAG_ACCOUNT_BALANCE));
+                account.setAccountCurrency(jsonAccount.getString(TAG_ACCOUNT_CURRENCY));
+                account.setCustId(jsonAccount.getString(TAG_CUSTOMER_ID));
+                account.setAccountNumber(jsonAccount.getString(TAG_ACCOUNT_NUMBER));
+
+                accounts.add(account);
+                Log.d("BlueBankApiAdapter", account.getAccountNumber());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.d(TAG, "JSONException while parsing account data");
+        }
+        return accounts;
+    }
 
     //GET Bearer network request
     public String GET_BEARER() throws IOException{
@@ -137,7 +192,6 @@ public class BlueBankApiAdapter implements ApiAdapter {
         Response response = null;
         try {
             response = new APIRequest().execute(request).get();
-//            Log.d("BlueBankApiAdapter", "SUCCESS");
         } catch (InterruptedException e) {
             e.printStackTrace();
             Log.d(TAG, "InterruptedException while retrieving customer data");
@@ -178,6 +232,17 @@ public class BlueBankApiAdapter implements ApiAdapter {
         return null;
     }
 
+    /*
+    * GET URI METHODS
+    */
+    public HttpUrl getBearerUri(){
+        return new HttpUrl.Builder()
+                .scheme(HTTPS)
+                .host(BEARER_URI)
+                .addPathSegment(BEARER_TOKEN)
+                .build();
+    }
+
     public HttpUrl getCustomersUri(){
         return new HttpUrl.Builder()
                 .scheme(HTTPS)
@@ -188,11 +253,15 @@ public class BlueBankApiAdapter implements ApiAdapter {
                 .build();
     }
 
-    public HttpUrl getBearerUri(){
+    private HttpUrl getAccountsUri(String id) {
         return new HttpUrl.Builder()
                 .scheme(HTTPS)
-                .host(BEARER_URI)
-                .addPathSegment(BEARER_TOKEN)
+                .host(BLUE_URI)
+                .addPathSegment(BLUE_API)
+                .addPathSegment(BLUE_VERSION)
+                .addPathSegment(TAG_CUSTOMERS)
+                .addPathSegment(id)
+                .addPathSegment(TAG_ACCOUNTS)
                 .build();
     }
 }

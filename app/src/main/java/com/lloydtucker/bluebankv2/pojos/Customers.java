@@ -1,4 +1,4 @@
-package com.lloydtucker.bluebankv2;
+package com.lloydtucker.bluebankv2.pojos;
 
 import java.io.Serializable;
 
