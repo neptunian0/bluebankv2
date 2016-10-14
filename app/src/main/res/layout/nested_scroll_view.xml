@@ -12,19 +12,19 @@
 		android:orientation="vertical"
 		android:paddingTop="10dp">
 
-		<include layout="@layout/scroll_view_item"/>
-		<include layout="@layout/scroll_view_item"/>
-		<include layout="@layout/scroll_view_item"/>
-		<include layout="@layout/scroll_view_item"/>
-		<include layout="@layout/scroll_view_item"/>
-		<include layout="@layout/scroll_view_item"/>
-		<include layout="@layout/scroll_view_item"/>
-		<include layout="@layout/scroll_view_item"/>
-		<include layout="@layout/scroll_view_item"/>
-		<include layout="@layout/scroll_view_item"/>
-		<include layout="@layout/scroll_view_item"/>
-		<include layout="@layout/scroll_view_item"/>
-		<include layout="@layout/scroll_view_item"/>
+		<include layout="@layout/recycler_view_item"/>
+		<include layout="@layout/recycler_view_item"/>
+		<include layout="@layout/recycler_view_item"/>
+		<include layout="@layout/recycler_view_item"/>
+		<include layout="@layout/recycler_view_item"/>
+		<include layout="@layout/recycler_view_item"/>
+		<include layout="@layout/recycler_view_item"/>
+		<include layout="@layout/recycler_view_item"/>
+		<include layout="@layout/recycler_view_item"/>
+		<include layout="@layout/recycler_view_item"/>
+		<include layout="@layout/recycler_view_item"/>
+		<include layout="@layout/recycler_view_item"/>
+		<include layout="@layout/recycler_view_item"/>
 
 	</LinearLayout>
 
