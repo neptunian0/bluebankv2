@@ -3,7 +3,11 @@ package com.lloydtucker.bluebankv2;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
+import com.lloydtucker.bluebankv2.helpers.AccountsAdapter;
 import com.lloydtucker.bluebankv2.helpers.BlueBankApiAdapter;
 import com.lloydtucker.bluebankv2.interfaces.ApiAdapter;
 import com.lloydtucker.bluebankv2.pojos.Accounts;
@@ -21,6 +25,7 @@ import static com.lloydtucker.bluebankv2.helpers.Constants.numberApis;
 public class MainActivity extends AppCompatActivity {
 //    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.collapsingToolbar) CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.recyclerView) RecyclerView recyclerView;
 
     ArrayList<Customers> customers = new ArrayList<>();
     ArrayList<Accounts> accounts = new ArrayList<>();
@@ -54,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         //set the toolbar to include the greeting and the customer name
         String greeting = getGreeting() + customers.get(0).getGivenName();
         collapsingToolbar.setTitle(greeting);
+
+        setUpRecyclerView();
     }
 
     //Determine which greeting to display in the toolbar
@@ -71,5 +78,17 @@ public class MainActivity extends AppCompatActivity {
             greeting += "Good evening, ";
         }
         return greeting;
+    }
+
+    private void setUpRecyclerView() {
+        AccountsAdapter adapter = new AccountsAdapter(this, accounts);
+        recyclerView.setAdapter(adapter);
+
+        LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this);
+        mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(mLinearLayoutManagerVertical);
+
+        //even if we don't use this, it will use the default animation
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 }
