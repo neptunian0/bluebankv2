@@ -155,12 +155,8 @@ public class BlueBankApiAdapter implements ApiAdapter {
 
         //Make the API Request and retrieve the result
         Response response = null;
-        String stringResponse = "";
         try {
             response = new APIRequest().execute(request).get();
-            stringResponse = response.body().string();
-//            Log.d("BlueBankApiAdapter", "SUCCESS");
-//            Log.d("BlueBankApiAdapter", response.body().string());
         } catch (InterruptedException e) {
             e.printStackTrace();
             Log.d(TAG, "InterruptedException while retrieving bearer token");
@@ -173,7 +169,7 @@ public class BlueBankApiAdapter implements ApiAdapter {
         JSONObject jsonObject;
         String bearer = "";
         try {
-            jsonObject = new JSONObject(stringResponse);
+            jsonObject = new JSONObject(response.body().string());
             bearer = jsonObject.getString(TAG_BEARER);
         } catch (JSONException e) {
             e.printStackTrace();
