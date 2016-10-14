@@ -56,8 +56,8 @@ public class BlueBankApiAdapter implements ApiAdapter {
 
     //Store the retrieved data locally to enable greater
     //modularity in travering the respective APIs
-    ArrayList<Customers> customers;
-    ArrayList<Accounts> accounts;
+    private ArrayList<Customers> customers;
+    private ArrayList<Accounts> accounts;
 
     //Empty constructor
     public BlueBankApiAdapter(){
@@ -145,7 +145,7 @@ public class BlueBankApiAdapter implements ApiAdapter {
     }
 
     //GET Bearer network request
-    public String GET_BEARER() throws IOException{
+    private String GET_BEARER() throws IOException{
         //Build the bearer request
         Request request = new Request.Builder()
                 //primary key held below
@@ -155,9 +155,12 @@ public class BlueBankApiAdapter implements ApiAdapter {
 
         //Make the API Request and retrieve the result
         Response response = null;
+        String stringResponse = "";
         try {
             response = new APIRequest().execute(request).get();
+            stringResponse = response.body().string();
 //            Log.d("BlueBankApiAdapter", "SUCCESS");
+//            Log.d("BlueBankApiAdapter", response.body().string());
         } catch (InterruptedException e) {
             e.printStackTrace();
             Log.d(TAG, "InterruptedException while retrieving bearer token");
@@ -170,7 +173,7 @@ public class BlueBankApiAdapter implements ApiAdapter {
         JSONObject jsonObject;
         String bearer = "";
         try {
-            jsonObject = new JSONObject(response.body().string());
+            jsonObject = new JSONObject(stringResponse);
             bearer = jsonObject.getString(TAG_BEARER);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -235,7 +238,7 @@ public class BlueBankApiAdapter implements ApiAdapter {
     /*
     * GET URI METHODS
     */
-    public HttpUrl getBearerUri(){
+    private HttpUrl getBearerUri(){
         return new HttpUrl.Builder()
                 .scheme(HTTPS)
                 .host(BEARER_URI)
@@ -243,7 +246,7 @@ public class BlueBankApiAdapter implements ApiAdapter {
                 .build();
     }
 
-    public HttpUrl getCustomersUri(){
+    private HttpUrl getCustomersUri(){
         return new HttpUrl.Builder()
                 .scheme(HTTPS)
                 .host(BLUE_URI)
