@@ -6,7 +6,8 @@
 	android:layout_height="wrap_content"
 	android:layout_margin="16dp"
 	android:elevation="5dp"
-	app:cardCornerRadius="5dp">
+	app:cardCornerRadius="5dp"
+	app:cardBackgroundColor="@color/RBSBlue">
 
 	<LinearLayout
 		android:layout_width="match_parent"
@@ -15,19 +16,23 @@
 		android:orientation="vertical">
 
 		<TextView
+			android:id="@+id/accountHeader"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="Dummy Header"
-			android:textColor="@android:color/holo_red_dark"
+			android:fontFamily="sans-serif-thin"
+			android:textColor="@android:color/white"
 			android:textSize="20sp"
 			android:textStyle="bold"/>
 
 		<TextView
+			android:id="@+id/accountBody"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="5dp"
+			android:fontFamily="sans-serif-medium"
 			android:text="@string/dummy_long_text"
-			android:textColor="@android:color/black"
+			android:textColor="@android:color/white"
 			android:textSize="15sp"/>
 
 	</LinearLayout>

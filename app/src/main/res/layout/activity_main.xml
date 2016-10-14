@@ -43,7 +43,8 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/nested_scroll_view"/>
+    <!--<include layout="@layout/nested_scroll_view"/>-->
+    <include layout="@layout/nested_recycler_view"/>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"

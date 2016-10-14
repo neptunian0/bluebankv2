@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">@color/RBSBlue</color>
+    <color name="colorPrimaryDark">@color/RBSHeaderBlue</color>
+    <color name="colorAccent">@color/RBSCaledonianCrimson</color>
+
+    <color name="RBSBlue">#003B79</color>
+    <color name="RBSHeaderBlue">#012853</color>
+    <color name="RBSCaledonianCrimson">#B50054</color>
+    <color name="RBSSalmonPink">#E64442</color>
+    <color name="RBSWhiskeyGold">#E5730A</color>
+    <color name="RBSHighlandGreen">#96A400</color>
+    <color name="RBSArranAqua">#009F8D</color>
+    <color name="RBSSkyeBlue">#0079A2</color>
+    <color name="RBSThistlePurple">#711D68</color>
+    <color name="RBSEighteenthGreen">#7EA649</color>
+    <color name="RBSCallunaPink">#BD7893</color>
+    <color name="RBSScottishBluebell">#5479B6</color>
 </resources>
