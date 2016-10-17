@@ -5,6 +5,7 @@ import android.util.Log;
 import com.lloydtucker.bluebankv2.interfaces.ApiAdapter;
 import com.lloydtucker.bluebankv2.pojos.Accounts;
 import com.lloydtucker.bluebankv2.pojos.Customers;
+import com.lloydtucker.bluebankv2.pojos.Transactions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,6 +20,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.lloydtucker.bluebankv2.helpers.Constants.ACCOUNTS;
 import static com.lloydtucker.bluebankv2.helpers.Constants.BEARER_TOKEN;
 import static com.lloydtucker.bluebankv2.helpers.Constants.BEARER_URI;
 import static com.lloydtucker.bluebankv2.helpers.Constants.BLUE_API;
@@ -28,10 +30,12 @@ import static com.lloydtucker.bluebankv2.helpers.Constants.HEADER;
 import static com.lloydtucker.bluebankv2.helpers.Constants.HEADER_BEARER;
 import static com.lloydtucker.bluebankv2.helpers.Constants.HTTPS;
 import static com.lloydtucker.bluebankv2.helpers.Constants.JSON;
+import static com.lloydtucker.bluebankv2.helpers.Constants.SORT_ORDER;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNTS;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_BALANCE;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_CURRENCY;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_FRIENDLY_NAME;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_ID;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_NUMBER;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_TYPE;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ADDRESS_1;
@@ -44,7 +48,13 @@ import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ID;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_POST_CODE;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_SORT_CODE;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_TOWN;
-import static com.lloydtucker.bluebankv2.helpers.Constants.blue_primary;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_TRANSACTIONS;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_TRANSACTION_AMOUNT;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_TRANSACTION_DATE;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_TRANSACTION_DESCRIPTION;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_TRANSACTION_TYPE;
+import static com.lloydtucker.bluebankv2.helpers.Constants.TRANSACTION_DATE_TIME_DESC;
+import static com.lloydtucker.bluebankv2.helpers.Constants.BLUE_PRIMARY;
 import static com.lloydtucker.bluebankv2.helpers.Constants.client;
 
 /**
@@ -58,11 +68,13 @@ public class BlueBankApiAdapter implements ApiAdapter {
     //modularity in travering the respective APIs
     private ArrayList<Customers> customers;
     private ArrayList<Accounts> accounts;
+    private ArrayList<Transactions> transactions;
 
     //Empty constructor
     public BlueBankApiAdapter(){
         customers = new ArrayList<>();
         accounts = new ArrayList<>();
+        transactions = new ArrayList<>();
     }
 
     /*
@@ -79,9 +91,8 @@ public class BlueBankApiAdapter implements ApiAdapter {
         //Retrieve the customer data, then parse it
         Response response = GET(getCustomersUri());
         String stringResponse = response.body().string();
-        JSONArray jsonArray;
         try {
-            jsonArray = new JSONArray(stringResponse);
+            JSONArray jsonArray = new JSONArray(stringResponse);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonCustomer = jsonArray.getJSONObject(i);
                 Customers customer = new Customers();
@@ -92,6 +103,7 @@ public class BlueBankApiAdapter implements ApiAdapter {
                 customer.setAddress1(jsonCustomer.getString(TAG_ADDRESS_1));
                 customer.setTown(jsonCustomer.getString(TAG_TOWN));
                 customer.setPostCode(jsonCustomer.getString(TAG_POST_CODE));
+                customer.setApiAdapterType(ApiAdapterType.BLUE);
 
                 customers.add(customer);
                 Log.d("BlueBankApiAdapter", customer.getGivenName());
@@ -118,9 +130,8 @@ public class BlueBankApiAdapter implements ApiAdapter {
         String customerId = customers.get(0).getId(); //assumes only one customer exists
         Response response = GET(getAccountsUri(customerId));
         String stringResponse = response.body().string();
-        JSONArray jsonArray;
         try {
-            jsonArray = new JSONArray(stringResponse);
+            JSONArray jsonArray = new JSONArray(stringResponse);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonAccount = jsonArray.getJSONObject(i);
                 Accounts account = new Accounts();
@@ -133,6 +144,7 @@ public class BlueBankApiAdapter implements ApiAdapter {
                 account.setAccountCurrency(jsonAccount.getString(TAG_ACCOUNT_CURRENCY));
                 account.setCustId(jsonAccount.getString(TAG_CUSTOMER_ID));
                 account.setAccountNumber(jsonAccount.getString(TAG_ACCOUNT_NUMBER));
+                account.setApiAdapterType(ApiAdapterType.BLUE);
 
                 accounts.add(account);
                 Log.d("BlueBankApiAdapter", account.getAccountNumber());
@@ -144,12 +156,47 @@ public class BlueBankApiAdapter implements ApiAdapter {
         return accounts;
     }
 
+    public ArrayList<Transactions> getTransactions(String accountId) throws IOException{
+        //check the dependencies for retrieving the transaction objects
+        if(bearer == null){
+            bearer = GET_BEARER();
+        }
+
+        //Retrieve the transactions data, then parse it
+        Response response = GET(getTransactionsUri(accountId));
+        String stringResponse = response.body().string();
+        try {
+            JSONArray jsonArray = new JSONArray(stringResponse);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonAccount = jsonArray.getJSONObject(i);
+                Transactions transaction = new Transactions();
+
+                transaction.setId(jsonAccount.getString(TAG_ID));
+                transaction.setAccountId(jsonAccount.getString(TAG_ACCOUNT_ID));
+                transaction.setTransactionDateTime(jsonAccount.getString(TAG_TRANSACTION_DATE));
+                transaction.setTransactionAmount(jsonAccount.getDouble(TAG_TRANSACTION_AMOUNT));
+                transaction.setAccountBalance(jsonAccount.getDouble(TAG_ACCOUNT_BALANCE));
+                transaction.setTransactionType(jsonAccount.getString(TAG_TRANSACTION_TYPE));
+                transaction.setTransactionDescription(jsonAccount.getString(
+                        TAG_TRANSACTION_DESCRIPTION));
+                transaction.setApiAdapterType(ApiAdapterType.BLUE);
+
+                transactions.add(transaction);
+//                Log.d("BlueBankApiAdapter", "" + transaction.getTransactionAmount());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.d(TAG, "JSONException while parsing transaction data");
+        }
+        return transactions;
+    }
+
     //GET Bearer network request
     private String GET_BEARER() throws IOException{
         //Build the bearer request
         Request request = new Request.Builder()
                 //primary key held below
-                .header(HEADER, blue_primary)
+                .header(HEADER, BLUE_PRIMARY)
                 .url(getBearerUri())
                 .build();
 
@@ -183,7 +230,7 @@ public class BlueBankApiAdapter implements ApiAdapter {
     public Response GET(HttpUrl url) throws IOException {
         Request request = new Request.Builder()
 	    //primary key held below
-	    .header(HEADER, blue_primary)
+	    .header(HEADER, BLUE_PRIMARY)
         .header(HEADER_BEARER, bearer)
 	    .url(url)
 	    .build();
@@ -208,7 +255,7 @@ public class BlueBankApiAdapter implements ApiAdapter {
         RequestBody body = RequestBody.create(JSON, json);
         Request request = new Request.Builder()
 	    //primary key held below
-	    .header(HEADER, blue_primary)
+	    .header(HEADER, BLUE_PRIMARY)
         .header(HEADER_BEARER, bearer)
 	    .url(url)
 	    .post(body)
@@ -222,7 +269,7 @@ public class BlueBankApiAdapter implements ApiAdapter {
         RequestBody body = RequestBody.create(JSON, json);
         Request request = new Request.Builder()
                 //primary key held below
-                .header(HEADER, blue_primary)
+                .header(HEADER, BLUE_PRIMARY)
                 .header(HEADER_BEARER, bearer)
                 .url(url)
                 .patch(body)
@@ -261,6 +308,19 @@ public class BlueBankApiAdapter implements ApiAdapter {
                 .addPathSegment(TAG_CUSTOMERS)
                 .addPathSegment(id)
                 .addPathSegment(TAG_ACCOUNTS)
+                .build();
+    }
+
+    private HttpUrl getTransactionsUri(String id) {
+        return new HttpUrl.Builder()
+                .scheme(HTTPS)
+                .host(BLUE_URI)
+                .addPathSegment(BLUE_API)
+                .addPathSegment(BLUE_VERSION)
+                .addPathSegment(ACCOUNTS)
+                .addPathSegment(id)
+                .addPathSegment(TAG_TRANSACTIONS)
+                .addQueryParameter(SORT_ORDER, TRANSACTION_DATE_TIME_DESC)
                 .build();
     }
 }
