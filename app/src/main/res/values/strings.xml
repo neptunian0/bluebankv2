@@ -4,4 +4,8 @@
     <string name="account_number">00&#8211;00&#8211;00   |   00000000</string>
     <string name="account_balance">£123.45</string>
     <string name="account_image">Account Image</string>
+
+    <string name="transaction_date">17 Oct 2016</string>
+    <string name="transaction_description">HARVEY NICHOLS</string>
+    <string name="transaction_amount">£1230.50</string>
 </resources>

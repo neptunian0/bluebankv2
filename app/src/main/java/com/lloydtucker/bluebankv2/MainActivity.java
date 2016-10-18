@@ -20,16 +20,17 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.lloydtucker.bluebankv2.helpers.Constants.numberApis;
+import static com.lloydtucker.bluebankv2.helpers.Constants.BLUE_INDEX;
+import static com.lloydtucker.bluebankv2.helpers.Constants.API_ADAPTERS;
+import static com.lloydtucker.bluebankv2.helpers.Constants.NUMBER_APIS;
 
 public class MainActivity extends AppCompatActivity {
-//    @BindView(R.id.toolbar) Toolbar toolbar;
+    //    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.collapsingToolbar) CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.recyclerView) RecyclerView recyclerView;
 
     ArrayList<Customers> customers = new ArrayList<>();
     ArrayList<Accounts> accounts = new ArrayList<>();
-    String result = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,22 +38,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        ApiAdapter[] apiAdapter = new ApiAdapter[numberApis];
-        apiAdapter[0] = new BlueBankApiAdapter();
+        setUpApiAdapters();
 
         //Retrieve the customer data
-        try{
-            ArrayList<Customers> temp = apiAdapter[0].getCustomers();
+        try {
+            ArrayList<Customers> temp = API_ADAPTERS[BLUE_INDEX].getCustomers();
             customers.addAll(temp);
-        } catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
         //Retrieve the account data
-        try{
-            ArrayList<Accounts> temp = apiAdapter[0].getAccounts();
+        try {
+            ArrayList<Accounts> temp = API_ADAPTERS[BLUE_INDEX].getAccounts();
             accounts.addAll(temp);
-        } catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -90,5 +90,10 @@ public class MainActivity extends AppCompatActivity {
 
         //even if we don't use this, it will use the default animation
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    private void setUpApiAdapters(){
+        API_ADAPTERS = new ApiAdapter[NUMBER_APIS];
+        API_ADAPTERS[BLUE_INDEX] = new BlueBankApiAdapter();
     }
 }

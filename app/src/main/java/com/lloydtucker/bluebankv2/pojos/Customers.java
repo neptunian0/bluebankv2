@@ -1,11 +1,33 @@
 package com.lloydtucker.bluebankv2.pojos;
 
+import com.lloydtucker.bluebankv2.helpers.ApiAdapterType;
+
 import java.io.Serializable;
 
 /**
  * Created by lloydtucker on 05/08/2016.
  */
 public class Customers implements Serializable{
+
+    private ApiAdapterType apiAdapterType;
+
+    /**
+     * ApiAdapter generated type that identifies which adapter to use
+     * (Required)
+     *
+     * The apiAdapterType
+     */
+    public ApiAdapterType getApiAdapterType() {
+        return apiAdapterType;
+    }
+
+    /**
+     *
+     * The apiAdapterType
+     */
+    public void setApiAdapterType(ApiAdapterType apiAdapterType) {
+        this.apiAdapterType = apiAdapterType;
+    }
 
     private static final long serialVersionUID = 1L;
     /**

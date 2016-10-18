@@ -3,6 +3,9 @@ package com.lloydtucker.bluebankv2.pojos;
 /**
  * Created by lloydtucker on 05/08/2016.
  */
+
+import com.lloydtucker.bluebankv2.helpers.ApiAdapterType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +24,26 @@ public class Accounts {
     private String accountFriendlyName;
     private Double accountBalance;
     private String accountCurrency;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private ApiAdapterType apiAdapterType;
+
+    /**
+     * ApiAdapter generated type that identifies which adapter to use
+     * (Required)
+     *
+     * The apiAdapterType
+     */
+    public ApiAdapterType getApiAdapterType() {
+        return apiAdapterType;
+    }
+
+    /**
+     *
+     * The apiAdapterType
+     */
+    public void setApiAdapterType(ApiAdapterType apiAdapterType) {
+        this.apiAdapterType = apiAdapterType;
+    }
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     /**
      * System-generated Id that uniquely identifies a single bank account
@@ -186,5 +208,4 @@ public class Accounts {
     public String toString(){
         return "Account Number: " + accountNumber;
     }
-
 }

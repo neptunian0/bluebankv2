@@ -2,6 +2,7 @@ package com.lloydtucker.bluebankv2.interfaces;
 
 import com.lloydtucker.bluebankv2.pojos.Accounts;
 import com.lloydtucker.bluebankv2.pojos.Customers;
+import com.lloydtucker.bluebankv2.pojos.Transactions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +20,9 @@ public interface ApiAdapter {
 
     //get the account data
     ArrayList<Accounts> getAccounts() throws IOException;
+
+    //get the transactions data
+    ArrayList<Transactions> getTransactions(String accountId) throws IOException;
 
     //GET network request
     Response GET(HttpUrl url) throws IOException;
