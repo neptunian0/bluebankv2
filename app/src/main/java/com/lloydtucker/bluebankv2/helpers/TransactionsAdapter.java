@@ -22,8 +22,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by lloydtucker on 14/10/2016.
  */
@@ -44,15 +42,12 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
     */
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder");
         View view = mInflater.inflate(R.layout.recycler_view_transaction_item, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder " + position);
-
         Transactions currentObj = mDataList.get(position);
         holder.setData(currentObj, position); //important for onClickListeners and buttons
         holder.setListeners();

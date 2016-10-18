@@ -162,6 +162,8 @@ public class BlueBankApiAdapter implements ApiAdapter {
             bearer = GET_BEARER();
         }
 
+        transactions.clear();
+
         //Retrieve the transactions data, then parse it
         Response response = GET(getTransactionsUri(accountId));
         String stringResponse = response.body().string();

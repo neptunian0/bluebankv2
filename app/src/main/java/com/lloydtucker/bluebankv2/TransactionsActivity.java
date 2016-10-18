@@ -3,7 +3,6 @@ package com.lloydtucker.bluebankv2;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Window;
@@ -87,8 +86,5 @@ public class TransactionsActivity extends AppCompatActivity {
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this);
         mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mLinearLayoutManagerVertical);
-
-        //even if we don't use this, it will use the default animation
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 }
