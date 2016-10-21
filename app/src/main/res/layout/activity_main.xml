@@ -47,12 +47,13 @@
     <include layout="@layout/nested_recycler_view"/>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/mainFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:src="@drawable/ic_star"
         app:layout_anchor="@id/appbarlayout"
         app:layout_anchorGravity="bottom|right"
-        app:fabSize="normal"/>
+        app:fabSize="normal" />
 
 </android.support.design.widget.CoordinatorLayout>

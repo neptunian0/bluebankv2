@@ -17,7 +17,6 @@ import com.lloydtucker.bluebankv2.R;
 import com.lloydtucker.bluebankv2.TransactionsActivity;
 import com.lloydtucker.bluebankv2.pojos.Accounts;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,6 +31,8 @@ import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_SHARED;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_CUSTOMER_ID;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ID;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_SORT_CODE;
+import static com.lloydtucker.bluebankv2.helpers.Constants.formatBalance;
+import static com.lloydtucker.bluebankv2.helpers.Constants.getCurrencySymbol;
 
 /**
  * Created by lloydtucker on 14/10/2016.
@@ -106,6 +107,8 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.MyView
         }
 
         //Assumes when the user clicks on an account, the only transition goes to Transactions
+        /*TODO: Performance issues here
+         *frames are getting skipped and there's a delay before the activity begins*/
         @Override
         public void onClick(View v) {
             Log.d("Clicked", "at position " + position);
@@ -130,11 +133,6 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.MyView
             itemView.setOnClickListener(MyViewHolder.this);
         }
 
-        private String formatBalance(Double balance){
-            DecimalFormat formatter = new DecimalFormat("#,##0.00");
-            return formatter.format(balance);
-        }
-
         private String formatSortCode(String sortCode){
             String formatted = "";
             if(sortCode.length() % 2 != 0){
@@ -149,25 +147,6 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.MyView
                 }
             }
             return formatted;
-        }
-
-        private String getCurrencySymbol(String currency){
-            String symbol;
-            switch(currency){
-                case "GBP":
-                    symbol = "£";
-                    break;
-                case "EUR":
-                    symbol = "€";
-                    break;
-                case "CAD":
-                case "USD":
-                    symbol = "$";
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unsupported currency: " + currency);
-            }
-            return symbol;
         }
     }
 }

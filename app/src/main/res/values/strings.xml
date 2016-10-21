@@ -8,4 +8,9 @@
     <string name="transaction_date">17 Oct 2016</string>
     <string name="transaction_description">HARVEY NICHOLS</string>
     <string name="transaction_amount">£1230.50</string>
+
+    <string name="sort_code">Sort Code</string>
+    <string name="payment_account_number">Account Number</string>
+    <string name="payment_reference">Payment Reference</string>
+    <string name="payment_amount">Payment Amount</string>
 </resources>

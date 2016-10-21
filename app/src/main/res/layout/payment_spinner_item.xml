@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/paymentSpinnerItem"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:padding="@dimen/payment_spinner_margin">
+
+    <TextView
+        android:id="@+id/paymentAccount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="(Blue Bank) Current Account"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="@dimen/text_body_2"/>
+
+    <TextView
+        android:id="@+id/paymentBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Balance: £100.00"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_body_2"/>
+
+</LinearLayout>

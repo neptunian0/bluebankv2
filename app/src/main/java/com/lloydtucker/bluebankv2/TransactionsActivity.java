@@ -29,6 +29,7 @@ import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_CUSTOMER_ID;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ID;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_SORT_CODE;
 
+//TODO: Might want to pre-load transactions for each account - have an expiry time for them
 public class TransactionsActivity extends AppCompatActivity {
     @BindView(R.id.accountHeader) CardView accountHeader;
     @BindView(R.id.recyclerView) RecyclerView recyclerView;
