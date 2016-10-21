@@ -7,6 +7,8 @@
     <dimen name="payment_spinner_margin">16dp</dimen>
     <dimen name="transaction_margin">8dp</dimen>
 
+    <dimen name="button_width">150dp</dimen>
+
     <!--TEXT SIZES-->
     <dimen name="text_body_2">14sp</dimen>
     <dimen name="text_subheading">16sp</dimen>

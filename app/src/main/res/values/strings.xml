@@ -13,4 +13,7 @@
     <string name="payment_account_number">Account Number</string>
     <string name="payment_reference">Payment Reference</string>
     <string name="payment_amount">Payment Amount</string>
+    <string name="payment_from">Payment From:</string>
+    <string name="payment_to">Payment To:</string>
+    <string name="make_payment">Make Payment</string>
 </resources>

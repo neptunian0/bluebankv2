@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Spinner;
 
 import com.lloydtucker.bluebankv2.helpers.AccountsAdapter;
 import com.lloydtucker.bluebankv2.helpers.BlueBankApiAdapter;
@@ -36,7 +35,6 @@ import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_BALANCE;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_DETAILS;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_FRIENDLY_NAME;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ID;
-import static com.lloydtucker.bluebankv2.helpers.Constants.paymentSpinner;
 
 public class MainActivity extends AppCompatActivity {
     //    @BindView(R.id.toolbar) Toolbar toolbar;
@@ -77,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
 
         setUpRecyclerView();
 
-        //after the content is loaded, and the accounts populated, load payments spinner
-        paymentSpinner = (Spinner) findViewById(R.id.paymentSpinner);
     }
 
     //Determine which greeting to display in the toolbar

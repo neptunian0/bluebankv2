@@ -69,11 +69,6 @@ public class PaymentsSpinnerAdapter extends ArrayAdapter<Accounts> {
         return view;
     }
 
-    @Override
-    public void setDropDownViewResource(int resource) {
-        super.setDropDownViewResource(resource);
-    }
-
     static class ViewHolder{
         @BindView(R.id.paymentAccount) TextView txvAccount;
         @BindView(R.id.paymentBalance) TextView txvBalance;
