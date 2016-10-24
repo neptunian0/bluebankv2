@@ -102,6 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/make_payment"
+            android:enabled="false"
             style="@style/Base.Widget.AppCompat.Button.Colored"/>
     </LinearLayout>
 

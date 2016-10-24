@@ -164,6 +164,7 @@ public class PaymentsActivity extends AppCompatActivity implements
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
         @Override
         public void afterTextChanged(Editable s) {
             switch(view.getId()){

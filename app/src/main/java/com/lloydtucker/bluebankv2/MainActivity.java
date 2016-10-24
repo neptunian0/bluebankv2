@@ -25,16 +25,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.lloydtucker.bluebankv2.R.id.accountBalance;
-import static com.lloydtucker.bluebankv2.R.id.accountDetails;
 import static com.lloydtucker.bluebankv2.helpers.Constants.API_ADAPTERS;
 import static com.lloydtucker.bluebankv2.helpers.Constants.BLUE_INDEX;
 import static com.lloydtucker.bluebankv2.helpers.Constants.NUMBER_APIS;
-import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNTS_SIZE;
-import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_BALANCE;
-import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_DETAILS;
-import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_FRIENDLY_NAME;
-import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ID;
 
 public class MainActivity extends AppCompatActivity {
     //    @BindView(R.id.toolbar) Toolbar toolbar;
@@ -55,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Retrieve the customer data
         try {
+            customers.clear();
             ArrayList<Customers> temp = API_ADAPTERS[BLUE_INDEX].getCustomers();
             customers.addAll(temp);
         } catch (IOException e) {
@@ -63,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Retrieve the account data
         try {
+            accounts.clear();
             ArrayList<Accounts> temp = API_ADAPTERS[BLUE_INDEX].getAccounts();
             accounts.addAll(temp);
         } catch (IOException e) {
@@ -115,15 +110,6 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View v){
         Log.d("Clicked", "on FAB");
         Intent intent = new Intent(this, PaymentsActivity.class);
-
-        int accountsSize = accounts.size();
-        intent.putExtra(TAG_ACCOUNTS_SIZE, accountsSize);
-        for(int i = 0; i < accountsSize; i++) {
-            intent.putExtra(TAG_ID + i, accounts.get(i).getId());
-            intent.putExtra(TAG_ACCOUNT_FRIENDLY_NAME + i, accounts.get(i).getAccountFriendlyName());
-            intent.putExtra(TAG_ACCOUNT_DETAILS + i, accountDetails);
-            intent.putExtra(TAG_ACCOUNT_BALANCE + i, accountBalance);
-        }
         this.startActivity(intent);
     }
 }

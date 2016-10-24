@@ -1,10 +1,13 @@
 package com.lloydtucker.bluebankv2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +21,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.lloydtucker.bluebankv2.helpers.Constants.API_ADAPTERS;
 import static com.lloydtucker.bluebankv2.helpers.Constants.BLUE_INDEX;
@@ -87,5 +91,12 @@ public class TransactionsActivity extends AppCompatActivity {
         LinearLayoutManager mLinearLayoutManagerVertical = new LinearLayoutManager(this);
         mLinearLayoutManagerVertical.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(mLinearLayoutManagerVertical);
+    }
+
+    @OnClick(R.id.transactionFab)
+    public void onClick(View v){
+        Log.d("Clicked", "on FAB");
+        Intent intent = new Intent(this, PaymentsActivity.class);
+        this.startActivity(intent);
     }
 }
