@@ -2,6 +2,7 @@ package com.lloydtucker.bluebankv2.interfaces;
 
 import com.lloydtucker.bluebankv2.pojos.Accounts;
 import com.lloydtucker.bluebankv2.pojos.Customers;
+import com.lloydtucker.bluebankv2.pojos.Payments;
 import com.lloydtucker.bluebankv2.pojos.Transactions;
 
 import java.io.IOException;
@@ -23,6 +24,12 @@ public interface ApiAdapter {
 
     //get the transactions data
     ArrayList<Transactions> getTransactions(String accountId) throws IOException;
+
+    //post the payment data
+    Payments postPayment(Payments payment) throws IOException;
+
+    //patch the payment data
+    Payments patchPayment(Payments payment) throws IOException;
 
     //GET network request
     Response GET(HttpUrl url) throws IOException;

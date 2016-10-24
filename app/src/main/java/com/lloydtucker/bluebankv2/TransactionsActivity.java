@@ -23,8 +23,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.lloydtucker.bluebankv2.helpers.ApiAdapterType.BLUE;
 import static com.lloydtucker.bluebankv2.helpers.Constants.API_ADAPTERS;
-import static com.lloydtucker.bluebankv2.helpers.Constants.BLUE_INDEX;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_BALANCE;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_DETAILS;
 import static com.lloydtucker.bluebankv2.helpers.Constants.TAG_ACCOUNT_FRIENDLY_NAME;
@@ -75,7 +75,7 @@ public class TransactionsActivity extends AppCompatActivity {
 
         //Retrieve the transaction data
         try {
-            ArrayList<Transactions> temp = API_ADAPTERS[BLUE_INDEX].getTransactions(accountId);
+            ArrayList<Transactions> temp = API_ADAPTERS[BLUE.getIndex()].getTransactions(accountId);
             transactions.addAll(temp);
         } catch (IOException e) {
             e.printStackTrace();

@@ -17,7 +17,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.lloydtucker.bluebankv2.helpers.Constants.formatBalance;
-import static com.lloydtucker.bluebankv2.helpers.Constants.getApiName;
 import static com.lloydtucker.bluebankv2.helpers.Constants.getCurrencySymbol;
 
 /**
@@ -59,7 +58,7 @@ public class PaymentsSpinnerAdapter extends ArrayAdapter<Accounts> {
             view.setTag(holder);
         }
 
-        String accountType = "(" + getApiName(account.getApiAdapterType()) + ") "
+        String accountType = "(" + account.getApiAdapterType().getName() + ") "
                 + account.getAccountFriendlyName();
         holder.txvAccount.setText(accountType);
         String balance = getCurrencySymbol(account.getAccountCurrency())

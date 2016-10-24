@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.lloydtucker.bluebankv2.helpers.AccountsAdapter;
+import com.lloydtucker.bluebankv2.helpers.ApiAdapterType;
 import com.lloydtucker.bluebankv2.helpers.BlueBankApiAdapter;
 import com.lloydtucker.bluebankv2.interfaces.ApiAdapter;
 import com.lloydtucker.bluebankv2.pojos.Accounts;
@@ -25,9 +26,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.lloydtucker.bluebankv2.helpers.ApiAdapterType.BLUE;
 import static com.lloydtucker.bluebankv2.helpers.Constants.API_ADAPTERS;
-import static com.lloydtucker.bluebankv2.helpers.Constants.BLUE_INDEX;
-import static com.lloydtucker.bluebankv2.helpers.Constants.NUMBER_APIS;
 
 public class MainActivity extends AppCompatActivity {
     //    @BindView(R.id.toolbar) Toolbar toolbar;
@@ -44,12 +44,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        //TODO: Change this to drop the array and use the Enum exclusively
         setUpApiAdapters();
 
         //Retrieve the customer data
         try {
             customers.clear();
-            ArrayList<Customers> temp = API_ADAPTERS[BLUE_INDEX].getCustomers();
+            ArrayList<Customers> temp = API_ADAPTERS[BLUE.getIndex()].getCustomers();
             customers.addAll(temp);
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         //Retrieve the account data
         try {
             accounts.clear();
-            ArrayList<Accounts> temp = API_ADAPTERS[BLUE_INDEX].getAccounts();
+            ArrayList<Accounts> temp = API_ADAPTERS[BLUE.getIndex()].getAccounts();
             accounts.addAll(temp);
         } catch (IOException e) {
             e.printStackTrace();
@@ -102,8 +103,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpApiAdapters(){
-        API_ADAPTERS = new ApiAdapter[NUMBER_APIS];
-        API_ADAPTERS[BLUE_INDEX] = new BlueBankApiAdapter();
+        API_ADAPTERS = new ApiAdapter[ApiAdapterType.count];
+        API_ADAPTERS[BLUE.getIndex()] = new BlueBankApiAdapter();
     }
 
     @OnClick(R.id.mainFAB)

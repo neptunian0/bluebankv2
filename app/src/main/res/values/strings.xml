@@ -16,4 +16,8 @@
     <string name="payment_from">Payment From:</string>
     <string name="payment_to">Payment To:</string>
     <string name="make_payment">Make Payment</string>
+    <string name="otp_code">OTP Code</string>
+    <string name="submit_otp">Submit OTP</string>
+    <string name="otp_explanation">Your bank just sent you a text message with a one time password
+    in it. Please enter it here to authorise this payment.</string>
 </resources>
